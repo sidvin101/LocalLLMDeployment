@@ -12,6 +12,12 @@ I used llama.cpp to deploy a server with this model. Once llama.cpp is installed
 ```
 To get a server running. 
 
+Once done, run 
+```
+app.py
+```
+For the flask app that will make an API call for the server.
+
 ## Project Complexity
 This repo showcases a simple web application that wraps a locally deployed LLM via a llama.cpp server through an API call. A Flask front end is used for interaction.
 
