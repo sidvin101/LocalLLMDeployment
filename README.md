@@ -1,8 +1,14 @@
 # LocalLLMDeployment
 
-## model downloaded from https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF 
-I used llama.cpp to deploy a server with this model. Once llama.cpp is installed, I run
+## model downloaded from https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF
 
+## Deployment Procss
+- Install llama.cpp
+- Clone this repo
+- Install requirements from requirements.txt
+- Download the model from the url link (you may have to request access first)
+- Once the model is downloaded, rename it to model.gguf, and keep track of the path to the model
+- Run the below code to get the server running:
 ```
 ./llama-server \
   --model /path/to/model.gguf \
@@ -10,22 +16,24 @@ I used llama.cpp to deploy a server with this model. Once llama.cpp is installed
   --ctx-size 512 \
   --n-gpu-layers 20
 ```
-To get a server running. 
+- In a separate terminal, run app.py. This will be your main method of making API calls
 
-Once done, run 
+## Application Process
+- The user asks a question to the chatbot
+- The message will be cached
+- If the message is already cached (i.e. if the user has already answered that question before), return the previous answer
+- Otherwise, compile the message into an API Wrapper payload
+- Using the payload, it will make an API call to the server and return the generated message. 
+
+## Architecture
 ```
-app.py
+|- /templates
+|  - index.html: The main flask UI
+|- app.py: The main flask app
+|- api_wrapper.py: handles the payload and caching logic
 ```
-For the flask app that will make an API call for the server.
 
-## Project Complexity
-This repo showcases a simple web application that wraps a locally deployed LLM via a llama.cpp server through an API call. A Flask front end is used for interaction.
-
-### Components
-- app.py: The Flask server, that provides with basic web UI with POST and GET functionality
-- api_wrapper.py: handles groups of chat payloads and caching
-
-## Big O aspects
+## Big O
 - Cache Hashing: O(n), where n is the length of the serialized input JSON file
 - Cache Lookup: Since it is a dictionary, the average case is O(1)
 - API Call: O(1) codewise, but is ultimately dependent on LLM server latency
